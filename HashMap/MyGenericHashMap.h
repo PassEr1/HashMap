@@ -41,7 +41,8 @@ class MyGenericHashMap
 {
 
 public:
-	MyGenericHashMap()
+	MyGenericHashMap(size_t tableSize=10)
+		:_table_size(tableSize)
 	{
 		//_hashTable = new vector<PairOfHashResult<K, V>*>(myHash::TABLE_SIZE);
 		for (size_t i = 0; i < _hashTable.size(); i++)
@@ -75,7 +76,7 @@ public:
 	void put(K key, V value)
 	{
 
-		size_t hashResult = _hashCalculator(key); // result is certintly in range of: 0 to TABLE_SIZE
+		size_t hashResult = _hashCalculator(key) % _table_size; // result is certintly in range of: 0 to TABLE_SIZE
 		PairOfHashResult<K, V>* pToListOfColisions;
 		PairOfHashResult<K, V>* previousPairWithSameHash = nullptr;
 		
@@ -109,7 +110,7 @@ public:
 
 	V get(K key)
 	{
-		size_t hashResult = _hashCalculator(key);
+		size_t hashResult = _hashCalculator(key) % _table_size;
 		PairOfHashResult<K, V>* pToListOfColisionKeyHash = _hashTable[hashResult];
 		while (pToListOfColisionKeyHash != nullptr)
 		{
@@ -127,6 +128,7 @@ public:
 private:
 	std::array<PairOfHashResult<K, V>*, myHash::TABLE_SIZE> _hashTable;
 	HashCalculator _hashCalculator;
+	const size_t _table_size;
 };
 
 
